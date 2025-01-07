@@ -147,7 +147,7 @@ const downloadConference = async (index: number, acronym: string) => {
     ++episodeIndex;
   }
 
-  process.stdout.write(`echo "${titleSanitize(conference.title)} synchronized."`);
+  process.stdout.write(`echo "${titleSanitize(conference.title)} synchronized."\n`);
 };
 
 const main = async () => {
