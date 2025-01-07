@@ -134,10 +134,11 @@ const downloadConference = async (index: number, acronym: string) => {
       outputDirectory,
       event,
       recording,
+      index,
       episodeIndex,
       padLength,
     );
-    const filenameThumb = makeFilenameThumb(outputDirectory, event, episodeIndex, padLength);
+    const filenameThumb = makeFilenameThumb(outputDirectory, event, index, episodeIndex, padLength);
     process.stdout.write(
       `echo "${episodeIndex.toString().padStart(padLength, " ")}/${events.length.toString()} ${titleSanitize(event.title)}" && ${download(recording.recording_url, filename)} && ${download(event.poster_url, filenameThumb)}\n`,
     );
@@ -168,7 +169,7 @@ const main = async () => {
     await downloadConference(congressIndex, `${congressIndex.toString()}c3`);
     process.stderr.write("\n");
   }
-  process.stderr.write("\nDone.\n");
+  process.stderr.write("Done.\n");
 };
 
 main().catch(redirectErrorsToConsole(console));
