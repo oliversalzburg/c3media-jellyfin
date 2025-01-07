@@ -1,5 +1,6 @@
 import { redirectErrorsToConsole } from "@oliversalzburg/js-utils/errors/console.js";
 import { InternalError } from "@oliversalzburg/js-utils/errors/InternalError.js";
+import { InvalidArgumentError } from "@oliversalzburg/js-utils/errors/InvalidArgumentError.js";
 import {
   Conferences,
   ConferenceWithEvents,
@@ -9,10 +10,7 @@ import {
 } from "./types.js";
 
 const API_BASE = "https://api.media.ccc.de/public";
-const MIRROR_CONGRESS = 31;
-const MIRROR_ACRONYM = `${MIRROR_CONGRESS}c3`;
 const MIRROR_MIMETYPE = "video/mp4";
-const MIRROR_OUTPUT = `Chaos Communication Congress (1984)/Season ${MIRROR_CONGRESS.toString().padStart(2, "0")}`;
 
 const getConferences = async (): Promise<Conferences> => {
   const response = await fetch(`${API_BASE}/conferences`);
@@ -53,21 +51,29 @@ const getFileExtension = (filename: string): string => {
   return filename.substring(separatorIndex + 1, filename.length);
 };
 
-const makeEpisodeIndex = (index: number, episodePad = 3): string => {
-  return `S${MIRROR_CONGRESS.toString().padStart(2, "0")}E${index.toString().padStart(episodePad, "0")}`;
+const makeEpisodeIndex = (seasonIndex: number, episodeIndex: number, episodePad = 3): string => {
+  return `S${seasonIndex.toString().padStart(2, "0")}E${episodeIndex.toString().padStart(episodePad, "0")}`;
 };
 
 const makeFilenameRecording = (
+  outputDirectory: string,
   event: Event,
   recording: Recording,
-  index: number,
+  seasonIndex: number,
+  episodeIndex: number,
   episodePad = 3,
 ): string => {
-  return `${MIRROR_OUTPUT}/${makeEpisodeIndex(index, episodePad)} - ${event.title.replaceAll(/[^-_a-z0-9 (),äöüÄÖÜ?!.]/gi, "").replaceAll(/ +/g, " ")}.${getFileExtension(recording.recording_url)}`;
+  return `${outputDirectory}/${makeEpisodeIndex(seasonIndex, episodeIndex, episodePad)} - ${event.title.replaceAll(/[^-_a-z0-9 (),äöüÄÖÜ?!.]/gi, "").replaceAll(/ +/g, " ")}.${getFileExtension(recording.recording_url)}`;
 };
 
-const makeFilenameThumb = (event: Event, index: number, episodePad = 3): string => {
-  return `${MIRROR_OUTPUT}/${makeEpisodeIndex(index, episodePad)} - ${event.title.replaceAll(/[^-_a-z0-9 (),äöüÄÖÜ?!.]/gi, "").replaceAll(/ +/g, " ")}-thumb.${getFileExtension(event.poster_url)}`;
+const makeFilenameThumb = (
+  outputDirectory: string,
+  event: Event,
+  seasonIndex: number,
+  episodeIndex: number,
+  episodePad = 3,
+): string => {
+  return `${outputDirectory}/${makeEpisodeIndex(seasonIndex, episodeIndex, episodePad)} - ${event.title.replaceAll(/[^-_a-z0-9 (),äöüÄÖÜ?!.]/gi, "").replaceAll(/ +/g, " ")}-thumb.${getFileExtension(event.poster_url)}`;
 };
 
 const download = (source: string, target: string) => {
@@ -78,22 +84,22 @@ const titleSanitize = (title: string): string => {
   return title.replaceAll(/\r?\n/g, "").replaceAll(/"/g, '\\"').replaceAll(/\$/g, "\\$");
 };
 
-const main = async () => {
-  const conference = await getConference(MIRROR_ACRONYM);
+const downloadConference = async (index: number, acronym: string) => {
+  const outputDirectory = `Chaos Communication Congress (1984)/Season ${index.toString().padStart(2, "0")}`;
+
+  const conference = await getConference(acronym);
   const events = conference.events.toSorted((a, b) =>
     a.date === b.date
       ? a.title.toLocaleLowerCase().localeCompare(b.title.toLocaleLowerCase())
       : new Date(a.date).valueOf() - new Date(b.date).valueOf(),
   );
-  process.stderr.write(`${events.length} events retrieved.\n`);
+  process.stderr.write(`Got ${events.length} events. Retrieving recordings`);
 
   const padLength = events.length.toString().length;
-
-  process.stdout.write("#!/usr/bin/env bash\n");
   process.stdout.write(
     `echo "${titleSanitize(conference.title)}" && ${download(
       conference.logo_url,
-      `${MIRROR_OUTPUT}/cover.${getFileExtension(conference.logo_url)}`,
+      `${outputDirectory}/cover.${getFileExtension(conference.logo_url)}`,
     )}\n`,
   );
 
@@ -124,17 +130,45 @@ const main = async () => {
         : recordings.sort((a, b) => a.height - b.height)
     )[0];
 
-    const filename = makeFilenameRecording(event, recording, episodeIndex, padLength);
-    const filenameThumb = makeFilenameThumb(event, episodeIndex, padLength);
+    const filename = makeFilenameRecording(
+      outputDirectory,
+      event,
+      recording,
+      episodeIndex,
+      padLength,
+    );
+    const filenameThumb = makeFilenameThumb(outputDirectory, event, episodeIndex, padLength);
     process.stdout.write(
       `echo "${episodeIndex.toString().padStart(padLength, " ")}/${events.length.toString()} ${titleSanitize(event.title)}" && ${download(recording.recording_url, filename)} && ${download(event.poster_url, filenameThumb)}\n`,
     );
+    process.stderr.write(".");
 
     ++episodeIndex;
   }
 
   process.stdout.write(`echo "${titleSanitize(conference.title)} synchronized."`);
-  process.stderr.write("Done.\n");
+};
+
+const main = async () => {
+  const args = process.argv.slice(2);
+  const subjectIds = new Set<number>();
+  for (const arg of args) {
+    const congressIndex = parseInt(arg);
+    if (congressIndex < 16 || 39 < congressIndex) {
+      throw new InvalidArgumentError(
+        `'${congressIndex.toString()}' is not a valid congress index.`,
+      );
+    }
+
+    subjectIds.add(congressIndex);
+  }
+
+  process.stdout.write("#!/usr/bin/env bash\n");
+  for (const congressIndex of subjectIds) {
+    await downloadConference(congressIndex, `${congressIndex.toString()}c3`);
+    process.stderr.write("\n");
+  }
+  process.stderr.write("\nDone.\n");
 };
 
 main().catch(redirectErrorsToConsole(console));
