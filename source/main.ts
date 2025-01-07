@@ -12,7 +12,7 @@ import {
 const API_BASE = "https://api.media.ccc.de/public";
 const MIRROR_MIMETYPE = "video/mp4";
 
-const getConferences = async (): Promise<Conferences> => {
+const _getConferences = async (): Promise<Conferences> => {
   const response = await fetch(`${API_BASE}/conferences`);
   if (response.status !== 200) {
     throw new InternalError("non-200 response");
