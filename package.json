@@ -21,7 +21,7 @@
     "@oliversalzburg/js-utils": "0.2.2",
     "@types/eslint": "9.6.1",
     "@types/node": "22.13.1",
-    "esbuild": "0.24.2",
+    "esbuild": "0.25.0",
     "eslint": "9.20.0",
     "eslint-config-prettier": "10.0.1",
     "eslint-plugin-jsdoc": "50.6.3",
