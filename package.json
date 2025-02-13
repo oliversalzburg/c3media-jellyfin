@@ -20,7 +20,7 @@
     "@oliversalzburg/eslint-config": "1.3.0",
     "@oliversalzburg/js-utils": "0.2.2",
     "@types/eslint": "9.6.1",
-    "@types/node": "22.13.1",
+    "@types/node": "22.13.2",
     "esbuild": "0.25.0",
     "eslint": "9.20.1",
     "eslint-config-prettier": "10.0.1",
