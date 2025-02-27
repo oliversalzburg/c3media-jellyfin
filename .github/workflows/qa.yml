@@ -3,9 +3,6 @@ name: QA
 on:
   pull_request:
   push:
-    branches:
-      - "**"
-      - "!main"
 
 jobs:
   qa:
