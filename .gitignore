@@ -11,3 +11,4 @@ coverage
 node_modules
 output
 sync.sh
+tsconfig.tsbuildinfo

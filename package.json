@@ -8,9 +8,9 @@
     "@biomejs/biome": "1.9.4",
     "@oliversalzburg/js-utils": "0.2.2",
     "@types/node": "22.10.5",
-    "esbuild": "0.25.0",
-    "lint-staged": "15.4.3",
-    "typescript": "5.7.3"
+    "esbuild": "0.24.2",
+    "typescript": "5.7.2"
   },
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@4.6.0",
+  "version": ""
 }
