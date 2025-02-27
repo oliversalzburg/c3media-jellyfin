@@ -271,10 +271,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oliversalzburg/js-utils@npm:0.2.2":
-  version: 0.2.2
-  resolution: "@oliversalzburg/js-utils@npm:0.2.2"
-  checksum: 10c0/25770d0bd1486dca28bd34bb92956bc01046b5f3242d011ce29875fc563ebb81d9d2678c7c726e4e449dd0a281b8b69fb15612de7ae89dd0e68ebef67c7dd926
+"@oliversalzburg/js-utils@npm:0.2.8":
+  version: 0.2.8
+  resolution: "@oliversalzburg/js-utils@npm:0.2.8"
+  checksum: 10c0/f42c46176852109fffdd2c4e4d8bb3b8c6fec8f5fce3659424148350ca39238aa61af02bc06af2fe3fa74b57e3b194b74b90457f9820f19f331127e68fa27c88
   languageName: node
   linkType: hard
 
@@ -292,7 +292,7 @@ __metadata:
   resolution: "c3media-jellyfin@workspace:."
   dependencies:
     "@biomejs/biome": "npm:1.9.4"
-    "@oliversalzburg/js-utils": "npm:0.2.2"
+    "@oliversalzburg/js-utils": "npm:0.2.8"
     "@types/node": "npm:22.10.5"
     esbuild: "npm:0.25.0"
     typescript: "npm:5.7.3"
