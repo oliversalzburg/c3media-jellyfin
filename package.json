@@ -11,6 +11,6 @@
     "esbuild": "0.25.5",
     "typescript": "5.8.3"
   },
-  "packageManager": "yarn@4.9.1",
-  "version": ""
+  "version": "0.0.1",
+  "private": true
 }
