@@ -1,9 +1,9 @@
+import { redirectErrorsToConsole } from "@oliversalzburg/js-utils/errors/console.js";
 import { InternalError } from "@oliversalzburg/js-utils/errors/InternalError.js";
 import { InvalidArgumentError } from "@oliversalzburg/js-utils/errors/InvalidArgumentError.js";
-import { redirectErrorsToConsole } from "@oliversalzburg/js-utils/errors/console.js";
 import {
-  ConferenceWithEvents,
   Conferences,
+  ConferenceWithEvents,
   Event,
   EventWithRecordings,
   Recording,
