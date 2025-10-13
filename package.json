@@ -5,7 +5,7 @@
   "author": "Oliver Salzburg <oliver.salzburg@gmail.com>",
   "type": "module",
   "devDependencies": {
-    "@biomejs/biome": "2.2.5",
+    "@biomejs/biome": "2.2.6",
     "@oliversalzburg/js-utils": "0.5.0",
     "@types/node": "22.18.10",
     "esbuild": "0.25.10",
