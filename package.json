@@ -7,7 +7,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.3.1",
     "@oliversalzburg/js-utils": "0.5.0",
-    "@types/node": "22.18.12",
+    "@types/node": "24.9.1",
     "esbuild": "0.25.11",
     "typescript": "5.9.3"
   },
