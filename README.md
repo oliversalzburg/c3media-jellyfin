@@ -1,5 +1,8 @@
 # prototype
 
+> [!CAUTION]
+> Works fine, no longer interested in maintaining. Thus, **archived as of 2026-03-28**.
+
 ```shell
 make output && node output/main.js 37 38 > sync.sh
 ```
